@@ -1,32 +1,52 @@
+import { useState } from "react";
 import { Link, useRouteLoaderData } from "react-router-dom";
+import useDeleteNote from "@/hooks/useDeleteNote";
+import { ArrowIcon } from "@/assets/icons/ArrowIcon";
+import { DeleteIcon } from "@/assets/icons/DeleteIcon";
+import { LoadingIcon } from "@/assets/icons/LoadingIcon";
 import "./notes.css";
 
 function Notes() {
-  const notes = useRouteLoaderData("notes");
+  const initialNotes = useRouteLoaderData("notes");
+  const [notes, setNotes] = useState(initialNotes);
+
+  const { deleteNote, isLoading, error } = useDeleteNote({
+    onSuccess: (deletedId) => {
+      setNotes((prevNotes) =>
+        prevNotes.filter((note) => note.id !== deletedId),
+      );
+    },
+  });
 
   return (
     <div className="notes">
       <h1>Notes</h1>
-      {notes.map((note) => (
-        <div className="note" key={note.id}>
-          <span className="note-text">{note.text}</span>
-          <Link to={note.id} className="note-link" aria-label="Read note">
-            <svg
-              width="18"
-              height="18"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="2"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-            >
-              <line x1="5" y1="12" x2="19" y2="12"></line>
-              <polyline points="12 5 19 12 12 19"></polyline>
-            </svg>
-          </Link>
-        </div>
-      ))}
+      <ul>
+        {error && (
+          <li className="note" key="errorDeletingNote">
+            <p className="error">Failed to delete note.</p>
+          </li>
+        )}
+        {notes.map((note) => (
+          <li className="note" key={note.id}>
+            <span className="note-text">{note.text}</span>
+            <div className="note-actions">
+              <button
+                type="button"
+                className="note-action-btn delete-btn"
+                aria-label="Delete note"
+                onClick={() => deleteNote(note.id)}
+                disabled={isLoading}
+              >
+                {isLoading ? <LoadingIcon /> : <DeleteIcon />}
+              </button>
+              <Link to={note.id} className="note-link" aria-label="Read note">
+                <ArrowIcon />
+              </Link>
+            </div>
+          </li>
+        ))}
+      </ul>
     </div>
   );
 }
