@@ -11,12 +11,16 @@ function Notes() {
   const [notes, setNotes] = useState(initialNotes);
 
   const { deleteNote, isLoading, error } = useDeleteNote({
-    onSuccess: (deletedId) => {
+    onSuccess: (deletedNote) => {
       setNotes((prevNotes) =>
-        prevNotes.filter((note) => note.id !== deletedId),
+        prevNotes.filter((note) => note.id !== deletedNote.id),
       );
     },
   });
+
+  const handleDeleteNote = (id) => {
+    deleteNote({ path: `notes/${id}` });
+  };
 
   return (
     <div className="notes">
@@ -35,7 +39,7 @@ function Notes() {
                 type="button"
                 className="note-action-btn delete-btn"
                 aria-label="Delete note"
-                onClick={() => deleteNote(note.id)}
+                onClick={() => handleDeleteNote(note.id)}
                 disabled={isLoading}
               >
                 {isLoading ? <LoadingIcon /> : <DeleteIcon />}

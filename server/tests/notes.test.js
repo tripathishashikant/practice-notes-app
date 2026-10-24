@@ -1,11 +1,11 @@
 import request from "supertest";
-import app from "./server-immutable.js";
+import app from "../server.js";
 
 describe("Notes API Endpoints", () => {
   let createdId;
 
   it("should fetch notes list", async () => {
-    const res = await request(app).get("/api/notes");
+    const res = await request(app).get("/api/v1/notes");
 
     expect(res.statusCode).toEqual(200);
     expect(Array.isArray(res.body)).toBe(true);
@@ -13,7 +13,7 @@ describe("Notes API Endpoints", () => {
 
   it("should create a new note", async () => {
     const res = await request(app)
-      .post("/api/notes")
+      .post("/api/v1/notes")
       .send({ text: "Test Note" });
 
     expect(res.statusCode).toEqual(201);
@@ -24,7 +24,7 @@ describe("Notes API Endpoints", () => {
 
   it("should update a note", async () => {
     const res = await request(app)
-      .put(`/api/notes/${createdId}`)
+      .put(`/api/v1/notes/${createdId}`)
       .send({ text: "Updated Test Note" });
 
     expect(res.statusCode).toEqual(200);
@@ -32,7 +32,7 @@ describe("Notes API Endpoints", () => {
   });
 
   it("should delete a note", async () => {
-    const res = await request(app).delete(`/api/notes/${createdId}`);
+    const res = await request(app).delete(`/api/v1/notes/${createdId}`);
 
     expect(res.statusCode).toEqual(200);
     expect(res.body).toEqual({ message: "Note deleted Successfully" });

@@ -7,7 +7,6 @@ const PORT = 5001;
 app.use(cors());
 app.use(express.json());
 
-// In-memory notes array using mutable operations
 let notes = [
   { id: "1", text: "This is note 1" },
   { id: "2", text: "This is note 2" },
@@ -29,7 +28,6 @@ app.post("/api/notes", (req, res) => {
     text: text.trim(),
   };
 
-  // Mutable array operation
   notes.push(newNote);
 
   res.status(201).json(newNote);
@@ -43,7 +41,6 @@ app.delete("/api/notes/:id", (req, res) => {
     return res.status(404).json({ error: "Note not found" });
   }
 
-  // Mutable array operation
   notes.splice(index, 1);
 
   res.json({ message: "Note deleted Successfully" });
@@ -63,7 +60,6 @@ app.put("/api/notes/:id", (req, res) => {
     return res.status(404).json({ error: "Note not found" });
   }
 
-  // Direct object mutation
   note.text = text.trim();
 
   res.json(note);

@@ -7,14 +7,12 @@ const PORT = 5002;
 app.use(cors());
 app.use(express.json());
 
-// In-memory collection using JavaScript Map for O(1) operations
 const notesMap = new Map([
   ["1", { id: "1", text: "This is note 1" }],
   ["2", { id: "2", text: "This is note 2" }],
 ]);
 
 app.get("/api/notes", (req, res) => {
-  // Convert Map values to an array for JSON response
   res.json(Array.from(notesMap.values()));
 });
 
@@ -31,7 +29,6 @@ app.post("/api/notes", (req, res) => {
     text: text.trim(),
   };
 
-  // O(1) Map insertion
   notesMap.set(id, newNote);
 
   res.status(201).json(newNote);
@@ -44,7 +41,6 @@ app.delete("/api/notes/:id", (req, res) => {
     return res.status(404).json({ error: "Note not found" });
   }
 
-  // O(1) Map deletion
   notesMap.delete(id);
 
   res.json({ message: "Note deleted Successfully" });
@@ -64,7 +60,6 @@ app.put("/api/notes/:id", (req, res) => {
     return res.status(404).json({ error: "Note not found" });
   }
 
-  // Update and set back in O(1) time
   const updatedNote = { ...note, text: text.trim() };
   notesMap.set(id, updatedNote);
 

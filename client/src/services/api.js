@@ -9,8 +9,8 @@ const buildApiUrl = ({
   return `${domain}/api/${version}/${path}`;
 };
 
-async function fetchWithGet({ path, version, domain } = {}) {
-  const url = buildApiUrl({ path, version, domain });
+async function fetchWithGet({ domain, version, path } = {}) {
+  const url = buildApiUrl({ domain, version, path });
 
   try {
     const response = await fetch(url);
@@ -34,8 +34,8 @@ async function fetchWithPost({ path, version, domain }) {
   console.log(url);
 }
 
-async function fetchWithDelete({ path, version, domain } = {}) {
-  const url = buildApiUrl({ path, version, domain });
+async function fetchWithDelete({ domain, version, path } = {}) {
+  const url = buildApiUrl({ domain, version, path });
 
   try {
     const response = await fetch(url, { method: "DELETE" });

@@ -7,8 +7,6 @@ const PORT = 5000;
 app.use(cors());
 app.use(express.json());
 
-// app.disable("etag"); // to disable showing cached result with 304 status
-
 let notes = [
   { id: "1", text: "This is note 1" },
   { id: "2", text: "This is note 2" },

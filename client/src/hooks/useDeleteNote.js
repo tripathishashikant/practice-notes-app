@@ -5,14 +5,18 @@ function useDeleteNote({ onSuccess, onError } = {}) {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(null);
 
-  const deleteNote = async (id) => {
+  const deleteNote = async ({ domain, version, path }) => {
     setIsLoading(true);
     setError(null);
 
     try {
-      await fetchWithDelete({ path: `notes/${id}` });
+      const deletedNote = await fetchWithDelete({
+        path,
+        version,
+        domain,
+      });
 
-      if (onSuccess) onSuccess(id);
+      if (onSuccess) onSuccess(deletedNote);
     } catch (err) {
       setError(err);
 

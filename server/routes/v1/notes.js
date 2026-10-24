@@ -1,0 +1,66 @@
+import express from "express";
+
+const router = express.Router();
+
+const notesMap = new Map([
+  ["1", { id: "1", text: "This is note 1" }],
+  ["2", { id: "2", text: "This is note 2" }],
+  ["2", { id: "3", text: "This is note 3" }],
+]);
+
+router.get("/notes", (req, res) => {
+  res.json(Array.from(notesMap.values()));
+});
+
+router.post("/notes", (req, res) => {
+  const { text } = req.body;
+
+  if (typeof text !== "string" || !text.trim()) {
+    return res.status(400).json({ error: "Note text is required" });
+  }
+
+  const id = Date.now().toString();
+  const newNote = {
+    id,
+    text: text.trim(),
+  };
+
+  notesMap.set(id, newNote);
+
+  res.status(201).json(newNote);
+});
+
+router.delete("/notes/:id", (req, res) => {
+  const id = req.params.id;
+
+  if (!notesMap.has(id)) {
+    return res.status(404).json({ error: "Note not found" });
+  }
+
+  notesMap.delete(id);
+
+  res.json({ id: id, message: "Note deleted Successfully" });
+});
+
+router.put("/notes/:id", (req, res) => {
+  const { id } = req.params;
+  const { text } = req.body;
+
+  if (typeof text !== "string" || !text.trim()) {
+    return res.status(400).json({ error: "Note text is required" });
+  }
+
+  const note = notesMap.get(id);
+
+  if (!note) {
+    return res.status(404).json({ error: "Note not found" });
+  }
+
+  const updatedNote = { ...note, text: text.trim() };
+
+  notesMap.set(id, updatedNote);
+
+  res.json(updatedNote);
+});
+
+export default router;
