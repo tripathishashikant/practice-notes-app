@@ -5,7 +5,7 @@ const router = express.Router();
 const notesMap = new Map([
   ["1", { id: "1", text: "This is note 1" }],
   ["2", { id: "2", text: "This is note 2" }],
-  ["2", { id: "3", text: "This is note 3" }],
+  ["3", { id: "3", text: "This is note 3" }],
 ]);
 
 router.get("/notes", (req, res) => {

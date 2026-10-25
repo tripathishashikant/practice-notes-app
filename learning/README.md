@@ -9,6 +9,7 @@ Welcome to the structured learning documentation for the **Practice Notes App**!
 ### 🖥️ Client Side (`learning/client/`)
 - [`main.md`](client/main.md) - Entry point (`main.jsx`), React 18 `createRoot`, `StrictMode`, and Providers.
 - [`router.md`](client/router.md) - Client-side routing (`router.jsx`), Loaders vs Hooks, and Error Fallbacks.
+- [`actions.md`](client/actions.md) - React Router Actions, `useSubmit`, `useNavigation`, and automatic loader revalidation.
 - [`services/api.md`](client/services/api.md) - Service Layer & Separation of Concerns.
 - [`hooks/useGetNotes.md`](client/hooks/useGetNotes.md) - Async fetching, `useEffect` mount-driven actions, and why `useCallback` is necessary.     
 - [`hooks/useDeleteNote.md`](client/hooks/useDeleteNote.md) - Action hook pattern and event-driven state mutation.

@@ -1,10 +1,33 @@
-import { Link, useParams, useRouteLoaderData } from "react-router-dom";
+import {
+  Link,
+  useParams,
+  useRouteLoaderData,
+  useSubmit,
+  useNavigation,
+} from "react-router-dom";
+import { DeleteIcon } from "@/assets/icons/DeleteIcon";
+import { LoadingIcon } from "@/assets/icons/LoadingIcon";
 import "./note.css";
 
 function Note() {
+  const submit = useSubmit();
+  const navigation = useNavigation();
   const { id } = useParams();
   const notes = useRouteLoaderData("notes");
   const filteredNote = notes?.find((note) => note.id === id);
+  const isDeleting =
+    navigation.state == "submitting" &&
+    navigation.formAction === `/notes/${filteredNote.id}`;
+
+  const handleDeleteNote = (id) => {
+    const confirmDelete = window.confirm(
+      "Are you sure you want to delete this note?",
+    );
+
+    if (!confirmDelete) return;
+
+    submit(null, { method: "delete", action: `/notes/${id}` });
+  };
 
   if (!filteredNote) {
     return (
@@ -24,7 +47,18 @@ function Note() {
         <Link to=".." className="back-link">
           ← Back to Notes
         </Link>
-        <span className="note-id-badge">ID: {filteredNote.id}</span>
+        <div className="note-detail-actions-group">
+          <span className="note-id-badge">ID: {filteredNote.id}</span>
+          <button
+            type="button"
+            className="note-action-btn delete-btn"
+            aria-label="Delete note"
+            onClick={() => handleDeleteNote(filteredNote.id)}
+            disabled={isDeleting}
+          >
+            {isDeleting ? <LoadingIcon /> : <DeleteIcon />}
+          </button>
+        </div>
       </div>
       <div className="note-detail-card">
         <p className="note-detail-text">{filteredNote.text}</p>

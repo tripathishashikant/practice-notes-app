@@ -24,8 +24,15 @@ function Notes() {
 
   return (
     <div className="notes">
-      <h1>Notes</h1>
-      <ul>
+      <div className="notes-header">
+        <h1>Notes</h1>
+        <Link to="addNote" className="add-note-link" aria-label="Add new note">
+          <span>Add Note</span>
+          <ArrowIcon />
+        </Link>
+      </div>
+      <hr className="notes-separator" />
+      <ul className="notes-list">
         {error && (
           <li className="note" key="errorDeletingNote">
             <p className="error">Failed to delete note.</p>
