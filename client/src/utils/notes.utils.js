@@ -5,14 +5,25 @@ async function notesLoader() {
   return await fetchWithGet({ path: "notes" });
 }
 
-async function deleteNoteAction({ params }) {
-  console.log("enter deleteNoteAction ", params);
+async function deleteNoteAction({ request, params }) {
+  let { id } = params;
 
-  const response = await fetchWithDelete({ path: `notes/${params.id}` });
+  if (!id) {
+    const formData = await request.formData();
+    id = formData.get("id");
+  }
 
-  console.log(`Note ${response.id} deleted successfully`);
+  try {
+    const response = await fetchWithDelete({ path: `notes/${id}` });
 
-  return redirect("/");
+    console.log(`Note ${response.id} deleted successfully`);
+
+    return redirect("/");
+  } catch (error) {
+    console.error("Failed to delete note:", error);
+
+    return { error: "Failed to delete note. Please try again." };
+  }
 }
 
 export { notesLoader, deleteNoteAction };

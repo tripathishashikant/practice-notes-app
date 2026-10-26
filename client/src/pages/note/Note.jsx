@@ -4,6 +4,7 @@ import {
   useRouteLoaderData,
   useSubmit,
   useNavigation,
+  useActionData,
 } from "react-router-dom";
 import { DeleteIcon } from "@/assets/icons/DeleteIcon";
 import { LoadingIcon } from "@/assets/icons/LoadingIcon";
@@ -12,20 +13,16 @@ import "./note.css";
 function Note() {
   const submit = useSubmit();
   const navigation = useNavigation();
+  const actionData = useActionData();
   const { id } = useParams();
   const notes = useRouteLoaderData("notes");
   const filteredNote = notes?.find((note) => note.id === id);
   const isDeleting =
-    navigation.state == "submitting" &&
+    navigation.state === "submitting" &&
+    filteredNote &&
     navigation.formAction === `/notes/${filteredNote.id}`;
 
   const handleDeleteNote = (id) => {
-    const confirmDelete = window.confirm(
-      "Are you sure you want to delete this note?",
-    );
-
-    if (!confirmDelete) return;
-
     submit(null, { method: "delete", action: `/notes/${id}` });
   };
 
@@ -43,6 +40,7 @@ function Note() {
 
   return (
     <div className="note-detail-container">
+      {actionData?.error && <p className="error">{actionData.error}</p>}
       <div className="note-detail-header">
         <Link to=".." className="back-link">
           ← Back to Notes

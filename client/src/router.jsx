@@ -30,6 +30,7 @@ const router = createBrowserRouter([
         path: "notes",
         Component: NotesLayout,
         loader: notesLoader,
+        action: deleteNoteAction,
         children: [
           {
             index: true,

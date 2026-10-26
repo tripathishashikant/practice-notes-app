@@ -1,25 +1,25 @@
-import { useState } from "react";
-import { Link, useRouteLoaderData } from "react-router-dom";
-import useDeleteNote from "@/hooks/useDeleteNote";
+import {
+  Link,
+  useRouteLoaderData,
+  useSubmit,
+  useNavigation,
+  useActionData,
+} from "react-router-dom";
 import { ArrowIcon } from "@/assets/icons/ArrowIcon";
 import { DeleteIcon } from "@/assets/icons/DeleteIcon";
 import { LoadingIcon } from "@/assets/icons/LoadingIcon";
 import "./notes.css";
 
 function Notes() {
-  const initialNotes = useRouteLoaderData("notes");
-  const [notes, setNotes] = useState(initialNotes);
-
-  const { deleteNote, isLoading, error } = useDeleteNote({
-    onSuccess: (deletedNote) => {
-      setNotes((prevNotes) =>
-        prevNotes.filter((note) => note.id !== deletedNote.id),
-      );
-    },
-  });
+  const submit = useSubmit();
+  const navigation = useNavigation();
+  const actionData = useActionData();
+  const notes = useRouteLoaderData("notes") || [];
+  const isDeleting =
+    navigation.state === "Submitting" && navigation.formAction === `/notes`;
 
   const handleDeleteNote = (id) => {
-    deleteNote({ path: `notes/${id}` });
+    submit({ id }, { method: "delete", action: `/notes` });
   };
 
   return (
@@ -33,9 +33,9 @@ function Notes() {
       </div>
       <hr className="notes-separator" />
       <ul className="notes-list">
-        {error && (
+        {actionData?.error && (
           <li className="note" key="errorDeletingNote">
-            <p className="error">Failed to delete note.</p>
+            <p className="error">{actionData.error}</p>
           </li>
         )}
         {notes.map((note) => (
@@ -47,9 +47,9 @@ function Notes() {
                 className="note-action-btn delete-btn"
                 aria-label="Delete note"
                 onClick={() => handleDeleteNote(note.id)}
-                disabled={isLoading}
+                disabled={isDeleting}
               >
-                {isLoading ? <LoadingIcon /> : <DeleteIcon />}
+                {isDeleting ? <LoadingIcon /> : <DeleteIcon />}
               </button>
               <Link to={note.id} className="note-link" aria-label="Read note">
                 <ArrowIcon />
